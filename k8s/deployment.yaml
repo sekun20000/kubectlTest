@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: myapp
-          image: sekun20000/myapp:latest
+          image: taeyangha/myapp:latest # Docker Hub ID
           ports:
             - containerPort: 9098   # 변경
 ---
