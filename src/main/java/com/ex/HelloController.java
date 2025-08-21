@@ -7,7 +7,7 @@ import java.util.Map;
 @RestController
 public class HelloController {
 
-    @GetMapping("/hello")
+    @GetMapping("/hello11")
     public String hello() {
         return "Hello from Docker + Kubernetes!";
     }
