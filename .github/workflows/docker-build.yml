@@ -2,7 +2,8 @@ name: Build and Push Docker Image
 
 on:
   push:
-    branches: ["master"]   # main 브랜치에 push 될 때 실행
+    branches: ["master"]
+  workflow_dispatch:  # 이 한 줄 추가
 
 jobs:
   docker:
