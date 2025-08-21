@@ -12,7 +12,7 @@ public class HelloController {
         return "Hello from Docker + Kubernetes!";
     }
 
-    @GetMapping("/hello2")
+    @GetMapping("/hello23")
     public String hello(@RequestParam String name) {
         System.out.println("good boy");
         return "Hello boy, " + name + "!";
