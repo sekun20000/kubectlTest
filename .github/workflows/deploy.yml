@@ -2,8 +2,8 @@ name: Build and Deploy to Kubernetes
 
 on:
   push:
-    branches: ["master"]
-  workflow_dispatch:  # 수동 실행도 가능
+    branches: ["master"]   # master 브랜치에 push 될 때 실행
+  workflow_dispatch:        # 수동 실행도 가능
 
 jobs:
   build-and-deploy:
@@ -34,10 +34,12 @@ jobs:
 
       # 6. kubeconfig 설정
       - name: Configure kubeconfig
-        run: echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
-
-      # 7. Deployment 이미지 업데이트
-      - name: Update Kubernetes Deployment
         run: |
-          kubectl set image deployment/myapp myapp=${{ secrets.DOCKER_USERNAME }}/myapp:latest
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
+
+      # 7. Deployment 적용 (이미 없으면 생성, 있으면 업데이트)
+      - name: Apply Kubernetes manifests
+        run: |
+          kubectl apply -f k8s/deployment.yaml
           kubectl rollout status deployment/myapp
