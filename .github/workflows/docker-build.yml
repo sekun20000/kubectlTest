@@ -1,12 +1,12 @@
-name: Build and Push Docker Image
+name: Build and Deploy to Kubernetes
 
 on:
   push:
-    branches: ["master"]
-  workflow_dispatch:  # 이 한 줄 추가
+    branches: ["master"]   # master 브랜치 푸시 시 실행
+  workflow_dispatch:       # 수동 실행도 가능
 
 jobs:
-  docker:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,3 +25,21 @@ jobs:
       # 4. Docker 이미지 푸시
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/myapp:latest
+
+      # 5. kubectl 설치
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'latest'
+
+      # 6. kubeconfig 설정 (GitHub Secrets에 저장한 kubeconfig 사용)
+      - name: Configure kubeconfig
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
+
+      # 7. Kubernetes에 배포 적용
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl apply -f k8s/deployment.yaml
+          kubectl rollout status deployment/myapp
